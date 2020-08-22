@@ -1,0 +1,21 @@
+button {
+    outline: none;
+    padding: 10px;
+    margin-right: 10px;
+    border: none;
+    background: #26d7a6;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    display: flex;
+    align-items: center;
+}
+
+span {
+    margin-left: 10px;
+    cursor: pointer;
+}
