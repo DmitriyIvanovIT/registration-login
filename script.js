@@ -7,16 +7,18 @@ const h1 = document.querySelector('h1'),
 const dataArr = JSON.parse(localStorage.getItem('savesUser')) || [],
     month = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
+let name, login, password;
+
 const registr = () => {
-        let name, login, password;
-        name = isName();
-        if (name !== false) {
-            login = isLogin();
+        
+        isName();
+        if (name !== null) {
+            isLogin();
 
-            if (login !== false) {
-                password = isPassword();
+            if (login !== null) {
+                isPassword();
 
-                if (password !== false) {
+                if (password !== null) {
                     let date = new Date();
                     let user = {
                         firstName: name.split(' ')[0],
@@ -44,10 +46,8 @@ const registr = () => {
         return true;
     },
     isName = () => {
-        let name = prompt('Введите Имя и Фамилию');
-        if (name === null) {
-            return false;
-        } else {
+        name = prompt('Введите Имя и Фамилию');
+        if (name !== null) {
             if ((name.trim().length === 0 || name.split(' ').length !== 2 || isSting(name) === false)) {
                 isName();
             } else {
@@ -56,26 +56,22 @@ const registr = () => {
         }
     },
     isLogin = () => {
-        let login = prompt('Введите логин');
-        if (login === null) {
-            return false;
-        } else {
-            if ((login.trim().length === 0)) {
-                isLogin();
+        login = prompt('Введите логин на аглийском одни словом');
+        if (login !== null) {
+            if (login.trim().length !== 0 && isEngl(login) && login.split(' ').length === 1) {
+                return login;              
             } else {
-                return login;
+                isLogin();
             }
         }
     },
     isPassword = () => {
-        let password = prompt('Введите пароль');
-        if (password === null) {
-            return false;
-        } else {
-            if ((password.trim().length === 0)) {
-                isLogin();
-            } else {
+        password = prompt('Введите пароль');
+        if (password !== null) {
+            if (password.trim().length !== 0 && isEngl(password) && password.split(' ').length === 1) {
                 return password;
+            } else {
+                isPassword();
             }
         }
     },
@@ -108,30 +104,28 @@ const registr = () => {
         localStorage.setItem('savesUser', JSON.stringify(dataArr));
     },
     logIn = () => {
-        let login = isLogin();
-
-        if (login !== false) {
-            let password = isPassword();
-            let check;
-            if (password !== false) {
+        isLogin();
+        if (login !== null) {
+            isPassword();
+            if (password !== null) {
                 dataArr.forEach((item, i) => {
                     if(item.loginObj === login && item.passwordObj === password) {
                         renderText(i);
                         return;
+                    } else if (i === (dataArr.length - 1)) {
+                        alert('Неверно введен логин и пароль');
                     };
-
-                    check = false;
                 });
-
-                if(check === false) {
-                    alert('Неверно введен логин и пароль');
-                }
             }
         }
         
     },
     renderText = id => {
         h1.textContent = `Привет, ${dataArr[id].firstName}`;
+    }, 
+    isEngl = elem => {
+        let check = /[a-zA-Z0-9]/;
+        return check.test(elem);
     };
 
 
